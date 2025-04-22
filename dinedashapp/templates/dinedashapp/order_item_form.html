@@ -1,0 +1,21 @@
+{% extends 'dinedashapp/components/home_base.html' %}
+
+{% block title %}DineDash - Edit Order{% endblock title %}
+
+{% block content %}
+<div class="menu">
+    <h3>Editing order for {{ menu_item.name }}</h3>
+</div>
+
+<div class="menu">
+    <form method="post">
+        {% csrf_token %}
+        <p>The price for one {{ menu_item.name }} is ${{ menu_item.price }}.</p>
+        {% if editing %}
+        <p>Set to zero to remove from order.</p>
+        {% endif %}
+        {{ form.as_p }}
+        <input class="btn btn-primary" type="submit" value="Submit">
+    </form>
+</div>
+{% endblock content %}

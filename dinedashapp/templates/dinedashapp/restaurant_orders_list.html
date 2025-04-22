@@ -1,0 +1,28 @@
+{% extends 'dinedashapp/components/home_base.html' %}
+
+{% block title %}DineDash - Orders List{% endblock title %}
+
+{% block content %}
+<h2 class="menu-header">Pending Orders for {{ user.restaurant.name }}</h2>
+
+<div class="menu vertical" id="actual-orders-list" hx-get="" hx-select="#actual-orders-list" hx-swap="outerHTML"
+    hx-trigger="every 5s">
+    {% for order in orders %}
+    <div class="menu-item">
+        <h3>Order #{{ order.id }}</h3>
+        <button type="button" name="action" value="mark_as_ready_for_pickup" hx-post=""
+            hx-vals='{"order_id": "{{ order.id }}"}' hx-target="#actual-orders-list">
+            Mark as ready for pickup</button>
+        <ol>
+            {% for order_item in order.items.all %}
+            <li>{{ order_item.menu_item.name }} ({{ order_item.quantity }} in total)</li>
+            {% endfor %}
+        </ol>
+    </div>
+    {% empty %}
+    <div class="menu-item">
+        <em>No orders found.</em>
+    </div>
+    {% endfor %}
+</div>
+{% endblock content %}

@@ -1,0 +1,20 @@
+{% extends 'dinedashapp/components/home_base.html' %}
+
+{% block title %}DineDash - Edit Order{% endblock title %}
+
+{% block content %}
+<div class="menu vertical">
+    <h2>Order #{{ order.id }} for <a href="{% url 'restaurant_info' order.restaurant.pk %}">
+            {{ order.restaurant.name }}</a></h2>
+    <p>Click <a href="{% url 'manage_order' order.pk %}">here</a> to edit your order.</p>
+</div>
+
+<div class="menu">
+    <form method="post">
+        {% csrf_token %}
+        <p>Total: ${{ order.calc_total_cost }}. How will you pay?</p>
+        {{ form.as_p }}
+        <input class="btn btn-primary" type="submit" value="Place order">
+    </form>
+</div>
+{% endblock content %}

@@ -1,12 +1,11 @@
 {% extends 'dinedashapp/components/home_base.html' %}
-{% load static %}
 
 {% block title %}DineDash - Blog{% endblock title %}
 
 {% block content %}
 <div class="menu-header">Blog</div>
 
-<section class="menu menu-vertical">
+<section class="menu vertical">
     {% for post in blog_posts %}
     <div class="menu-item">
         <h3>{{ post.title }}</h3>

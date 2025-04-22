@@ -1,11 +1,25 @@
 from django.urls import path
 
 from dinedashapp.views import (
+    ChangeEmailView,
+    ChangePasswordView,
     CreateMenuItemView,
+    CreateOrderItemView,
+    CreateReviewView,
+    DeleteReviewView,
     DeliveryLogInView,
     DeliveryRegistrationView,
+    EditDeliveryAccountDetailsView,
     EditMenuItemView,
+    EditOrderItemView,
+    EditRegularAccountDetailsView,
     EditRestaurantInfoView,
+    EditReviewView,
+    ListOfReviewsView,
+    ManageOrder,
+    ModifyFavoriteStatus,
+    PlaceOrderView,
+    RegularAccountView,
     RegularLogInView,
     RegularRegistrationView,
     RestaurantInfoView,
@@ -15,9 +29,12 @@ from dinedashapp.views import (
     about_us,
     blog,
     contact_us,
+    delivery_orders_list,
     index,
     log_in_question,
     log_out,
+    regular_customer_orders_list,
+    restaurant_orders_list,
 )
 
 urlpatterns = [
@@ -46,10 +63,69 @@ urlpatterns = [
     path("order", RestaurantSearchView.as_view(), name="restaurant_search"),
     path("restaurant/<int:pk>", RestaurantInfoView.as_view(), name="restaurant_info"),
     path(
-        "restaurant/<int:pk>/edit",
+        "restaurant/<int:pk>/favorite_status/<int:status>",
+        ModifyFavoriteStatus.as_view(),
+        name="modify_favorite_status",
+    ),
+    path(
+        "restaurant/edit",
         EditRestaurantInfoView.as_view(),
         name="edit_restaurant_info",
     ),
+    path(
+        "restaurant/<int:restaurant_id>/reviews",
+        ListOfReviewsView.as_view(),
+        name="restaurant_reviews",
+    ),
+    path(
+        "restaurant/<int:restaurant_id>/reviews/create",
+        CreateReviewView.as_view(),
+        name="create_restaurant_review",
+    ),
+    path(
+        "restaurant/<int:restaurant_id>/reviews/edit",
+        EditReviewView.as_view(),
+        name="edit_restaurant_review",
+    ),
+    path(
+        "restaurant/reviews/delete/<int:review_id>",
+        DeleteReviewView.as_view(),
+        name="delete_restaurant_review",
+    ),
     path("menu/create", CreateMenuItemView.as_view(), name="create_menu_item"),
     path("menu/edit/<int:pk>", EditMenuItemView.as_view(), name="edit_menu_item"),
+    path("account/change_email", ChangeEmailView.as_view(), name="change_email"),
+    path(
+        "account/change_password",
+        ChangePasswordView.as_view(),
+        name="change_password",
+    ),
+    path(
+        "regular_account",
+        RegularAccountView.as_view(),
+        name="regular_account",
+    ),
+    path(
+        "regular_account/edit",
+        EditRegularAccountDetailsView.as_view(),
+        name="edit_regular_account",
+    ),
+    path(
+        "delivery_account/edit",
+        EditDeliveryAccountDetailsView.as_view(),
+        name="edit_delivery_account",
+    ),
+    path(
+        "order/add/<int:menu_item_id>",
+        CreateOrderItemView.as_view(),
+        name="create_order_item",
+    ),
+    path("order/edit/<int:pk>", EditOrderItemView.as_view(), name="edit_order_item"),
+    path("order/<int:pk>", ManageOrder.as_view(), name="manage_order"),
+    path("order/<int:order_id>/place", PlaceOrderView.as_view(), name="place_order"),
+    path("orders/restaurant", restaurant_orders_list, name="restaurant_orders"),
+    path("orders/delivery", delivery_orders_list, name="delivery_orders"),
+    path(
+        "orders/regular", regular_customer_orders_list, name="regular_customers_orders"
+    ),
 ]

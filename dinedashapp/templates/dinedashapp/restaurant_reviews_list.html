@@ -1,0 +1,35 @@
+{% extends 'dinedashapp/components/home_base.html' %}
+
+{% block title %}DineDash - Restaurant Info{% endblock title %}
+
+{% block content %}
+<h2 class="menu-header">{{ restaurant.name }}</h2>
+<h3 class="center">{{ restaurant.get_average_ratings }}</h3>
+<p class="center">Click <a href="{% url 'restaurant_info' restaurant.id  %}">here</a> to go back.</p>
+{% if user.is_authenticated and user.user_type == "Reg" %}
+
+{% if review_from_user_exists %}
+<p class="center">Click <a href="{% url 'edit_restaurant_review' restaurant.id  %}">here</a> to edit your review.</p>
+{% else %}
+<p class="center">Click <a href="{% url 'create_restaurant_review' restaurant.id  %}">here</a> to write a review.</p>
+{% endif %}
+
+{% else %}
+<p class="center">You can only write a review if you are logged in as a regular customer.</p>
+{% endif %}
+
+{% for review in reviews %}
+<div class="menu-item">
+    {% if review.user == user %}
+    <p><a href="{% url 'edit_restaurant_review' restaurant.id %}">Edit or delete</a></p>
+    {% endif %}
+    <h4>{{ review.rating }} out of 5</h4>
+    <p><em>Written on {{ review.date_created }}</em></p>
+    <p>{{ review.description }}</p>
+</div>
+{% empty %}
+<div class="menu-item">
+    <p><em>This restaurant has no reviews at this time.</em></p>
+</div>
+{% endfor %}
+{% endblock content %}

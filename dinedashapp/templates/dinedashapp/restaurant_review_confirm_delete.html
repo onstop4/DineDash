@@ -1,0 +1,14 @@
+{% extends 'dinedashapp/components/home_base.html' %}
+
+{% block title %}DineDash - Delete Review{% endblock title %}
+
+{% block content %}
+<div class="menu">
+    <form method="post">
+        {% csrf_token %}
+        <p>Are you sure you want to delete your review?</p>
+        {{ form }}
+        <input class="btn btn-primary" type="submit" value="Submit">
+    </form>
+</div>
+{% endblock content %}

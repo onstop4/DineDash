@@ -23,36 +23,57 @@
             justify-content: space-between;
             align-items: center;
             padding: 0 50px;
+            flex-wrap: wrap;
+            color: white;
         }
 
         .logo {
             font-size: 24px;
             font-weight: bold;
-            color: white;
         }
 
-        nav ul {
+        .nav-list {
             list-style: none;
             display: flex;
+            flex-wrap: wrap;
+            row-gap: 8px;
         }
 
-        nav ul li {
+        .nav-list li {
             margin: 0 15px;
         }
 
-        nav ul li a {
+        .nav-list li a {
             color: white;
             text-decoration: none;
             font-size: 18px;
         }
 
-        .reservation {
+        .upper-right {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            column-gap: 8px;
+        }
+
+        .upper-right a {
+            color: inherit;
+        }
+
+        .unstyled-list {
+            list-style: none;
+        }
+
+        .orange-button {
+            display: flex;
             background: orange;
             border: none;
             padding: 10px 20px;
             color: white;
             font-size: 18px;
             cursor: pointer;
+            text-decoration: none;
+            align-items: center;
         }
 
         .hero {
@@ -72,12 +93,20 @@
             font-size: 18px;
         }
 
-        .hero-image img {
+        .hero-image {
             width: 400px;
             height: auto;
+
+            display: none;
         }
 
-        .cta {
+        @media (min-width: 800px) and (min-height: 600px) {
+            .hero-image {
+                display: block;
+            }
+        }
+
+        .book-a-table {
             background: orange;
             border: none;
             padding: 15px 30px;
@@ -89,11 +118,13 @@
             display: flex;
             justify-content: center;
             gap: 20px;
-            margin: 50px;
+            margin: 20px;
+            flex-wrap: wrap;
         }
 
-        .menu-vertical {
+        .vertical {
             flex-direction: column;
+            align-items: center;
         }
 
         .menu-item {
@@ -109,26 +140,6 @@
             color: white;
         }
 
-        .pricing {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin: 50px;
-            background: #fffaf0;
-        }
-
-        .food-item {
-            background: white;
-            padding: 20px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
-
-        .discount {
-            text-decoration: line-through;
-            color: red;
-        }
-
         .menu-header {
             text-align: center;
             font-size: 24px;
@@ -140,28 +151,41 @@
             text-align: center;
         }
     </style>
+
+    <script src="https://unpkg.com/htmx.org@2.0.4"
+        integrity="sha384-HGfztofotfshcF7+8n44JQL2oJmowVChPTg48S+jvZoztPfvwD79OC/LTtG6dMp+"
+        crossorigin="anonymous"></script>
 </head>
 
 <body>
     <header>
         <nav>
             <div class="logo">DineDash.</div>
-            <ul>
+            <ul class="nav-list">
                 <li><a href="{% url 'index' %}">Home</a></li>
                 <li><a href="{% url 'about_us' %}">About Us</a></li>
                 <li><a href="{% url 'restaurant_search' %}">Order</a></li>
                 <li><a href="{% url 'blog' %}">Blog</a></li>
                 <li><a href="{% url 'contact_us' %}">Contact Us</a></li>
             </ul>
-            <div>
-                <button class="reservation">Reservation</button>
+            <div class="upper-right">
+                <button class=orange-button>Reservation</button>
                 {% if user.is_authenticated %}
-                {% if user.user_type == "Reg" %}
-                <span style="color: white">Signed in as {{ user.customer_info.get_full_name }}</span>
-                {% endif %}
-                <a href="{% url 'log_out' %}" class="reservation">Log out</a>
+                <p>
+                    {% if user.user_type == "Reg" %}
+                    Signed in as <a href="{% url 'regular_account' %}">{{ user.customer_info.get_full_name }}</a>
+                    {% elif user.user_type == "Res" %}
+                    Signed in as <a href="{% url 'restaurant_info' user.restaurant.pk %}">
+                        {{ user.restaurant.name }}
+                    </a>
+                    {% else %}
+                    Signed in as <a href="{% url 'delivery_orders' %}">
+                        {{ user.delivery_contractor_info.get_full_name }}</a>
+                    {% endif %}
+                </p>
+                <a href="{% url 'log_out' %}" class=orange-button>Log out</a>
                 {% else %}
-                <a href="{% url 'log_in_question' %}" class="reservation">Log in</a>
+                <a href="{% url 'log_in_question' %}" class=orange-button>Log in</a>
                 {% endif %}
             </div>
         </nav>

@@ -1,0 +1,19 @@
+{% extends 'dinedashapp/components/home_base.html' %}
+
+{% block title %}DineDash - Edit Account{% endblock title %}
+
+{% block content %}
+<h2 class="menu-header">Edit Your Account Details</h2>
+
+<div class="menu">
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input class="btn btn-primary" type="submit" value="Submit">
+
+        <p>Click <a href="{% url 'change_email' %}">here</a> to change your email address.</p>
+
+        <p>Click <a href="{% url 'change_password' %}">here</a> to change your password.</p>
+    </form>
+</div>
+{% endblock content %}

@@ -3,25 +3,41 @@
 {% block title %}DineDash - Restaurant Search{% endblock title %}
 
 {% block content %}
-<div class="pricing">
+<div class="menu">
     <form class="search-bar-form">
         <input type="text" placeholder="Search..." name="query" value="{{ query }}" />
-        <input type="submit" value="Search">
+        <select name="order_by">
+            <option value="name" {% if order_by == "name" %}selected="selected" {% endif %}>Name (A-Z)</option>
+            <option value="-name" {% if order_by == "-name" %}selected="selected" {% endif %}>Name (Z-A)</option>
+            <option value="highest_rating" {% if order_by == "highest_rating" %}selected="selected" {% endif %}>Highest
+                rating</option>
+            <option value="lowest_rating" {% if order_by == "lowest_rating" %}selected="selected" {% endif %}>Lowest
+                rating</option>
+            {% if user_has_location %}
+            <option value="lowest_distance" {% if order_by == "lowest_distance" %}selected="selected" {% endif %}>Lowest
+                distance</option>
+            {% endif %}
+        </select>
+        <input type="submit">
     </form>
 </div>
 
-{% if query %}
-<div class="menu menu-vertical">
+<div class="menu vertical">
     {% for restaurant in restaurants %}
     <div class="menu-item">
         <h4><a href="{% url 'restaurant_info' restaurant.pk %}">{{ restaurant.name }}</a></h4>
+        {% if restaurant.average_rating %}
+        <p>Rated {{ restaurant.average_rating }} out of 5</p>
+        {% endif %}
+        {% if "distance_away" in restaurant %}
+        <p>{{ restaurant.distance_away|floatformat:2 }} miles away</p>
+        {% endif %}
         <p>{{ restaurant.description }}</p>
     </div>
     {% empty %}
     <div class="menu-item">
-        <em>No items found</em>
+        <em>No restaurants found.</em>
     </div>
     {% endfor %}
 </div>
-{% endif %}
 {% endblock content %}

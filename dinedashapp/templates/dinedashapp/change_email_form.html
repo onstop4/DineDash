@@ -1,14 +1,14 @@
 {% extends 'dinedashapp/components/login_base.html' %}
 {% load crispy_forms_tags %}
 
-{% block title %}DineDash - {{ title }}{% endblock title %}
+{% block title %}DineDash - Change Email Address{% endblock title %}
 
 {% block content %}
-<h1>{{ title }}</h1>
+<h1>Change Email Address</h1>
 <form method="post" class="mb-3">
     {% csrf_token %}
     {{ form|crispy }}
+    <p>If you are redirected after clicking submit, then your email address was changed successfully.</p>
     <input class="btn btn-primary" type="submit" value="Submit">
 </form>
-<p>Don't have an account? <a href="{{ registration_url }}">Sign up here.</a></p>
 {% endblock content %}

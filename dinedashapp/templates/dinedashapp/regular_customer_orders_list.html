@@ -1,0 +1,52 @@
+{% extends 'dinedashapp/components/home_base.html' %}
+
+{% block title %}DineDash - Orders{% endblock title %}
+
+{% block content %}
+<h2 class="menu-header">Hello, {{ user.customer_info.first_name }}</h2>
+<div class="menu vertical">
+    <form>
+        {% if filter %}
+        <p>Filtering by orders that were {{ filter }}.</p>
+        {% else %}
+        <p>Showing all orders that have been placed. You can filter by the status of the orders using the form below.
+        </p>
+        {% endif %}
+        {{ form.as_p }}
+        <input class="btn btn-primary" type="submit" value="Filter by status">
+        {% if filter %}
+        <a href="{% url 'regular_customers_orders' %}"><button type="button">Show all</button></a>
+        {% endif %}
+    </form>
+    </p>
+</div>
+
+<div class="menu vertical" id="actual-orders-list" hx-get="" hx-select="#actual-orders-list" hx-swap="outerHTML"
+    hx-trigger="every 5s">
+    {% for order in orders %}
+    <div class="menu-item">
+        <h3><a href="{% url 'manage_order' order.id %}">Order #{{ order.id }}</a></h3>
+        <p>From: {{ order.restaurant.name }} ({{ order.restaurant.location }})</p>
+        <p>Status: {{ order.get_status_display }}</p>
+
+        {% if order.status != "Np" %}
+        <p>Placed on {{ order.date_placed|date:'N j, Y \a\t g:i A' }}.</p>
+        {% endif %}
+
+        {% if order.status == "It" %}
+        <p>In transit.
+            {% if order.minutes_away is not None %}
+            {{ order.minutes_away }} minutes away.
+            {% endif %}
+        </p>
+        {% elif order.status == "De" %}
+        <p>Delivered on {{ order.date_delivered|date:'N j, Y \a\t g:i A' }}.</p>
+        {% endif %}
+    </div>
+    {% empty %}
+    <div class="menu-item">
+        <em>No orders found.</em>
+    </div>
+    {% endfor %}
+</div>
+{% endblock content %}

@@ -1,0 +1,45 @@
+{% extends 'dinedashapp/components/home_base.html' %}
+
+{% block title %}DineDash - Order{% endblock title %}
+
+{% block content %}
+<div class="menu vertical">
+    <h2>Order #{{ object.id }} for <a href="{% url 'restaurant_info' object.restaurant.pk %}">
+            {{ object.restaurant.name }}</a></h2>
+
+    <h3>Total cost: ${{ object.calc_total_cost }}</h3>
+
+    {% if object.status != "Np" %}
+    <p>Placed on {{ object.date_placed|date:'N j, Y \a\t g:i A' }}.</p>
+    {% elif object.items.exists %}
+
+    {% if user.customer_info.location %}
+    <p><a href="{% url 'place_order' object.id %}">Place order</a></p>
+    {% else %}
+    <p>You must set your location to place an order. Click <a href="{% url 'edit_regular_account' %}">here</a> to edit
+        your account information.</p>
+    {% endif %}
+
+    {% endif %}
+
+    {% if object.status == "De" %}
+    <p>Delivered on {{ object.date_delivered|date:'N j, Y \a\t g:i A' }}.</p>
+    {% endif %}
+</div>
+
+<div class="menu vertical">
+    {% for order_item in object.items.all %}
+    <div class="menu-item">
+        <h4>{{ order_item.menu_item.name }}</h4>
+        <p>{{ order_item.quantity }} for ${{ order_item.menu_item.price }} each</p>
+        {% if object.status == "Np" %}
+        <p><a href="{% url 'edit_order_item' order_item.pk %}">Edit</a></p>
+        {% endif %}
+    </div>
+    {% empty %}
+    <div class="menu-item">
+        <em>This order is empty.</em>
+    </div>
+    {% endfor %}
+</div>
+{% endblock content %}

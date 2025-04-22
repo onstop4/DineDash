@@ -1,0 +1,60 @@
+{% extends 'dinedashapp/components/home_base.html' %}
+
+{% block title %}DineDash - Orders{% endblock title %}
+
+{% block content %}
+<h2 class="menu-header">Hello, {{ user.delivery_contractor_info.first_name }}</h2>
+<div class="menu vertical">
+    <p>Click <a href="{% url 'edit_delivery_account' %}">here</a> to edit your account information.</p>
+
+    {% if status_queried == "accepted" %}
+    <p>You are viewing orders that you already accepted and have not delivered yet. Click <a
+            href="{% url 'delivery_orders' %}">here</a> to view orders that haven't been accepted by anyone
+        yet.
+    </p>
+    {% else %}
+    <p>You are viewing orders within {{ max_distance }} miles of your location.
+        Click <a href="{% url 'edit_delivery_account' %}">here</a> to change your location, or click <a
+            href="{% url 'delivery_orders' %}?status=accepted">here</a> to view the orders that you have to deliver.
+
+    <form>
+        {{ form.as_p }}
+        <input class="btn btn-primary" type="submit" value="Submit">
+    </form>
+    </p>
+</div>
+{% endif %}
+
+<div class="menu vertical" id="actual-orders-list" hx-get="" hx-select="#actual-orders-list" hx-swap="outerHTML"
+    hx-trigger="every 5s">
+    {% for order in orders %}
+    <div class="menu-item">
+        <h3>Order #{{ order.id }}</h3>
+        <p>From {{ order.restaurant__location }} ({{ order.restaurant_distance_away|floatformat:2 }} miles away)</p>
+        <p>To {{ order.user__customer_info__location }} ({{ order.user_distance_away|floatformat:2 }} miles away)</p>
+
+        <form hx-post="{% url 'delivery_orders' %}" hx-target="#actual-orders-list">
+            <input type="hidden" name="order_id" value="{{ order.id }}">
+            <input type="hidden" name="max_distance" value="{{ max_distance }}">
+            {% if status_queried == 'accepted' %}
+            <div>
+                <label for="minutes-away-field-{{ order.id }}">Minutes away (optional)</label>
+                <input id="minutes-away-field-{{ order.id }}" type="number" min="0" name="minutes_away"
+                    value="{{ order.minutes_away }}">
+                <button name="action" value="set_minutes_away">Set minutes
+                    away</button>
+            </div>
+            <button name="action" value="mark_as_delivered">Mark as delivered</button>
+            {% else %}
+            <button name="action" value="accept">Accept</button>
+            <button name="action" value="reject">Reject</button>
+            {% endif %}
+        </form>
+    </div>
+    {% empty %}
+    <div class="menu-item">
+        <em>No orders found.</em>
+    </div>
+    {% endfor %}
+</div>
+{% endblock content %}

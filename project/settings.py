@@ -146,3 +146,6 @@ AUTH_USER_MODEL = "dinedashapp.User"
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 
 CRISPY_TEMPLATE_PACK = "bootstrap5"
+
+# This doesn't seem to do anything.
+# TIME_INPUT_FORMATS = ["%I:%M %p", "%H:%M:%S", "%H:%M:%S.%f", "%H:%M"]

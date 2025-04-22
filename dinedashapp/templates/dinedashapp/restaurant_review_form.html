@@ -1,0 +1,17 @@
+{% extends 'dinedashapp/components/home_base.html' %}
+
+{% block title %}DineDash - Write Review{% endblock title %}
+
+{% block content %}
+<div class="menu">Click <a href="{% url 'restaurant_reviews' restaurant_id %}">here</a> to go back.</div>
+{% if can_delete %}
+<div class="menu">Click <a href="{% url 'delete_restaurant_review' object.id %}">here</a> to delete your review.</div>
+{% endif %}
+<div class="menu">
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input class="btn btn-primary" type="submit" value="Submit">
+    </form>
+</div>
+{% endblock content %}
